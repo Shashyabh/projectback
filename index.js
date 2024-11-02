@@ -8,13 +8,6 @@ const app = express();
 app.use(express.json());
 
 app.use(cors());
-// app.use(
-// 	cors({
-// 		origin: "https://projectfront-fawn.vercel.app",
-// 		methods: ["GET", "POST", "PUT", "DELETE"],
-// 		credentials: true, // if you need to support cookies
-// 	})
-// );
 
 const connectDB = async () => {
 	try {
