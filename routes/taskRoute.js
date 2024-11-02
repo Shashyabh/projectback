@@ -206,4 +206,72 @@ taskRoutes.get("/getTasks", ValidateToken, async (req, res) => {
 	}
 });
 
+taskRoutes.get("/getTasks", ValidateToken, async (req, res) => {
+	try {
+		const { type } = req.query;
+		// type can be today , week , month
+		let date = new Date();
+		let filterDate = new Date();
+		if (type == "month") {
+			filterDate = new Date(today.getFullYear(), today.getMonth() + 1, 0); // Month is 0-indexed
+			filterDate.setHours(23, 59, 59, 0);
+		} else if (type == "today") {
+			filterDate.setHours(23, 59, 59, 0);
+		} else {
+			const day = date.getDay(); // Get the current day of the week (0 is Sunday, 6 is Saturday)
+			const daysUntilSunday = 6 - day;
+			filterDate.setDate(date.getDate() + daysUntilSunday);
+			filterDate.setHours(23, 59, 59, 0);
+		}
+
+		//  specfic users task ,
+		//  filter task by this day , this onth , this week  ,
+		// console.log(filterDate)
+		const tasks = await Task.find({
+			$or: [{ dueDate: { $lt: filterDate } }, { dueDate: null }],
+		}).populate("assignTo");
+		const backlog = [];
+		const inProgress = [];
+		const toDo = [];
+		const done = [];
+		// console.log(tasks);
+		for (let task of tasks) {
+			let obj = {
+				taskId: task?._id,
+				dueDate: task?.dueDate ? moment(task?.dueDate).format("MMM DD") : "",
+				checkLists: task?.checkLists ?? [],
+				priority: task?.priority,
+				assignTo: task?.assignTo?.map((item2) => {
+					return {
+						userId: item2?._id,
+						email: item2?.email,
+						name: item2?.name,
+					};
+				}),
+				status: task?.status,
+			};
+			if (obj.status == "backlog") {
+				backlog.push(obj);
+			} else if (obj.status == "todo") {
+				toDo.push(obj);
+			} else if (obj.status == "progress") {
+				inProgress.push(obj);
+			} else {
+				done.push(obj);
+			}
+		}
+		return res.json({
+			status: true,
+			data: { done, inProgress, backlog, done },
+			msg: "task fetched",
+		});
+	} catch (error) {
+		return res.json({
+			status: false,
+			data: null,
+			message: error.message,
+		});
+	}
+});
+
 module.exports = taskRoutes;
