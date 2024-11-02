@@ -1,0 +1,22 @@
+{
+    "sourceFile": "models/User.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 1,
+            "patches": [
+                {
+                    "date": 1730476440216,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                },
+                {
+                    "date": 1730476924722,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n@@ -12,9 +12,9 @@\n     password : {\r\n         type : String ,\r\n         required : true , \r\n     } , \r\n-    mentor : [{\r\n+    members : [{\r\n         type : mongoose.Schema.Types.ObjectId ,\r\n         ref : 'User'\r\n     }]\r\n } , { timeStamps : true });\r\n"
+                }
+            ],
+            "date": 1730476440216,
+            "name": "Commit-0",
+            "content": "const mongoose = require('mongoose');\r\n\r\nconst UserSchema = new  mongoose.Schema({\r\n    name : {\r\n        type : String ,\r\n        required : true ,\r\n    } ,\r\n    email : {\r\n        type : String ,\r\n        required : true ,\r\n    } ,\r\n    password : {\r\n        type : String ,\r\n        required : true , \r\n    } , \r\n    mentor : [{\r\n        type : mongoose.Schema.Types.ObjectId ,\r\n        ref : 'User'\r\n    }]\r\n} , { timeStamps : true });\r\n\r\nconst User = new  mongoose.model(\"User\" , UserSchema);\r\n\r\nmodule.exports = {\r\n    User \r\n}"
+        }
+    ]
+}
