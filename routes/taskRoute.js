@@ -268,5 +268,31 @@ taskRoutes.put("/updateTasksStatus/:id", async (req, res) => {
 		});
 	}
 });
+taskRoutes.delete("/deleteTask/:id", async (req, res) => {
+	try {
+		const { id } = req.params;
+		const deletedTask = await Task.findByIdAndDelete(id);
+
+		if (!deletedTask) {
+			return res.status(404).json({
+				status: false,
+				data: null,
+				message: "Task not found.",
+			});
+		}
+
+		return res.json({
+			status: true,
+			data: deletedTask,
+			message: "Task deleted successfully.",
+		});
+	} catch (error) {
+		return res.status(500).json({
+			status: false,
+			data: null,
+			message: error.message,
+		});
+	}
+});
 
 module.exports = taskRoutes;
